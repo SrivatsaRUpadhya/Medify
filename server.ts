@@ -4,9 +4,8 @@ dotenv.config();
 import cookieParser from "cookie-parser";
 import cors, { CorsOptions } from "cors";
 import authRouter from "./Routes/auth.router";
-import usersRouter from "./Routes/users.router";
+//import usersRouter from "./Routes/user.router";
 import secrets from "./utils/secrets";
-import { handleRedirect } from "./Controllers/auth.controller";
 import { z } from "zod";
 
 try {
@@ -42,22 +41,14 @@ try {
 	};
 
 	app.get("/", (req: Request, res: Response) => res.end("Live"));
-	app.get("/api/auth/redirect", handleRedirect);
 
 	app.options("*", cors(corsOptions));
 	app.use(cors(corsOptions));
 	app.use(express.json());
 	app.use(cookieParser());
 	app.use(authRouter);
-	app.use(inventoryRouter);
-	app.use(expensesRouter);
-	app.use(eventsRouter);
-	app.use(usersRouter);
-	app.use(settingsRouter);
-	app.use(driveRouter);
-	app.use(attendanceRouter);
-	app.listen(process.env.PORT, () => {
-		console.log(`Server live on port: ${process.env.PORT}`);
+	app.listen(secrets.serverPort, () => {
+		console.log(`Server live on port: ${secrets.serverPort}`);
 	});
 	const formatMemoryUsage = (data: any) =>
 		`${Math.round((data / 1024 / 1024) * 100) / 100} MB`;
