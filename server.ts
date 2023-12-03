@@ -4,7 +4,7 @@ dotenv.config();
 import cookieParser from "cookie-parser";
 import cors, { CorsOptions } from "cors";
 import authRouter from "./Routes/auth.router";
-//import usersRouter from "./Routes/user.router";
+import pageRouter from "./Routes/pages.router";
 import secrets from "./utils/secrets";
 import { z } from "zod";
 
@@ -39,13 +39,14 @@ try {
 		allowedHeaders: ["Content-Type"],
 		exposedHeaders: ["set-cookie"],
 	};
+	app.use(cookieParser());
+	app.use(express.urlencoded({ extended: true }));
+	app.get("/", (req: Request, res: Response) => res.render("index.pug"));
 
-	app.get("/", (req: Request, res: Response) => res.end("Live"));
-
+	app.engine('pug', require('pug').__express)
+	app.use(pageRouter);
 	app.options("*", cors(corsOptions));
 	app.use(cors(corsOptions));
-	app.use(express.json());
-	app.use(cookieParser());
 	app.use(authRouter);
 	app.listen(secrets.serverPort, () => {
 		console.log(`Server live on port: ${secrets.serverPort}`);

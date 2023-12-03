@@ -1,0 +1,20 @@
+doctype html
+html(lang="en")
+	head
+		title= title
+		script(src="https://unpkg.com/htmx.org@1.9.9" integrity="sha384-QFjmbokDn2DjBjq+fM+8LUIVrAgqcNW2s0PjAxHETgRn9l4fvX31ZxDxvwQnyMOX" crossorigin="anonymous" defer="true")
+		script(src="https://cdn.tailwindcss.com")
+		script(src="https://unpkg.com/htmx.org/dist/ext/response-targets.js")
+		script(src="https://www.google.com/recaptcha/api.js") 
+	body
+		div(class="container max-content m-auto p-20")
+			form(class="grid m-auto p-20 border-2 border-gray-300 rounded-md max-w-md" id="login-form" hx-post="/api/auth/login" hx-target="#login-form")
+				h1(class="text-center text-3xl") Login
+				input(type="email" name="email" placeholder="Email" class="border-2 border-gray-300 rounded-md p-2 m-2")
+				input(type="password" name="password" placeholder="Password" class="border-2 border-gray-300 rounded-md p-2 m-2")
+				div(class="g-recaptcha" name="captcha_response" data-sitekey="6LdXkegoAAAAAHJuSrGgWTjJ4sJJaMZ9eD_Roz8i")
+				button(type="submit" hx-post="/api/auth/login" hx-target-501="#error-message" class="bg-black hover:bg-black-700 text-white font-bold py-2 px-4 rounded m-2") Login
+				a(href="/register" class="text-center bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded m-2") Register
+				p(class="text-red-500 text-xs italic" id="error-message") 
+			
+	

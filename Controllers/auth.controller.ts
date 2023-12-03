@@ -57,11 +57,7 @@ const register = async (req: Request, res: Response) => {
 
 			res.cookie("accessToken", token, {
 				expires: new Date(Date.now() + 3600000 * 24),
-				domain: secrets.serverUrl,
-				path: "/api",
 				httpOnly: true,
-				sameSite: "none",
-				secure: true,
 			});
 			return res.status(200).json({
 				message: "success",
@@ -76,75 +72,71 @@ const register = async (req: Request, res: Response) => {
 
 const login = async (req: Request, res: Response) => {
 	await asyncWraper(req, res, async () => {
-		try {
-			const { email, password, captcha_response } = await req.body;
-			if (!email || !password || !captcha_response) {
-				return res.status(200).json({
-					status: "error",
-					data: "invalid credentials",
-				});
-			}
-			const final_user = await User.getUserByEmail(email);
-			if (!final_user) {
-				return res.status(200).json({
-					status: "error",
-					data: "user not found",
-				});
-			}
-
-			console.log(final_user);
-			const isPassword = await bcrypt.compare(
-				password.toString(),
-				final_user.password.toString()
-			);
-			if (!isPassword) {
-				return res.status(200).json({
-					status: "error",
-					data: "incorrect password or contact number",
-				});
-			}
-			const sessionData = {
-				name: final_user.patient_name,
-				email: final_user.email,
-				userId: final_user.patient_id,
-			};
-			const verify_captcha = await axios.post(
-				"https://www.google.com/recaptcha/api/siteverify",
-				{
-					secret: process.env.SECRET_KEY,
-					response: captcha_response,
-				},
-				{
-					headers: {
-						"Content-Type": "application/x-www-form-urlencoded",
-					},
-				}
-			);
-			console.log(verify_captcha.data);
-			if (!verify_captcha.data.success) throw new Error("Captcha failed");
-			const token = jwt.sign(sessionData as JwtPayload, "secret key", {
-				expiresIn: "1h",
-			});
-
-			res.cookie("accessToken", token, {
-				expires: new Date(Date.now() + 3600000 * 24),
-				path: "/api",
-				httpOnly: true,
-			});
-			console.log(sessionData);
-			return res.status(200).json(sessionData);
-		} catch (error) {
-			console.log(error);
-			res.status(200).json({ message: "Error" });
+		const { email, password } = await req.body;
+		console.log(req.body);
+		const captcha_response = await req.body["g-recaptcha-response"];
+		if (!email || !password || !captcha_response) {
+			return res.status(201).send("Invalid credentials");
 		}
+		const final_user = await User.getUserByEmail(email);
+		if (!final_user) {
+			return res.status(501).send("User not found");
+		}
+
+		//console.log(final_user);
+		const isPassword = await bcrypt.compare(
+			password.toString(),
+			final_user.password.toString()
+		);
+		if (!isPassword) {
+			return res.status(501).send("Invalid credentials");
+		}
+		const sessionData = {
+			name: final_user.patient_name,
+			email: final_user.email,
+			userId: final_user.patient_id,
+		};
+		const verify_captcha = await axios.post(
+			"https://www.google.com/recaptcha/api/siteverify",
+			{
+				secret: process.env.SECRET_KEY,
+				response: captcha_response,
+			},
+			{
+				headers: {
+					"Content-Type": "application/x-www-form-urlencoded",
+				},
+			}
+		);
+		console.log(verify_captcha.data);
+		if (!verify_captcha.data.success) throw new Error("Captcha failed");
+		const token = jwt.sign(
+			sessionData as JwtPayload,
+			secrets.jwt_key as string,
+			{
+				expiresIn: "1h",
+			}
+		);
+
+		res.cookie("accessToken", token, {
+			expires: new Date(Date.now() + 3600000 * 24),
+			httpOnly: true,
+		});
+		console.log(sessionData);
+		res.setHeader("HX-Redirect", "/dashboard");
+		return res.status(200).send("success");
 	});
 };
 
 const logout = async (req: Request, res: Response) => {
 	await asyncWraper(req, res, async () => {
 		try {
-			res.clearCookie("accessToken");
-			return res.status(200).json({ message: "success" });
+			res.clearCookie("accessToken", {
+				expires: new Date(Date.now() + 3600000 * 24),
+				httpOnly: true,
+			});
+			res.setHeader("HX-Redirect", "/login");
+			return res.status(200).send("success");
 		} catch (error) {
 			console.log(error);
 			return res.status(200).json({ message: "Error" });
@@ -173,22 +165,24 @@ const me = async (req: Request, res: Response) => {
 };
 
 const auth = (req: Request, res: Response, next: NextFunction) => {
-	const {accessToken} = req.cookies;
 	console.log(req.cookies);
+	const { accessToken } = req.cookies;
 	if (!accessToken) {
-		return res.status(401).json({ status: "error", data: "invalid user" });
+		res.setHeader("HX-Redirect", "/login");
+		return res.status(200).redirect("/login");
 	}
 	try {
 		jwt.verify(accessToken, secrets.jwt_key as string);
-		const user = jwt.decode(
-			accessToken
-		) as JwtPayload as AccessTokenType;
+		const user = jwt.decode(accessToken) as JwtPayload as AccessTokenType;
 		res.locals.user = user;
 		next();
 	} catch (err) {
-		return res
-			.status(401)
-			.json({ status: "error", data: "invalid user", error: err });
+		if (err instanceof jwt.TokenExpiredError) {
+			res.setHeader("HX-Redirect", "/login");
+			return res.status(200).redirect("session expired");
+		} else {
+			throw err;
+		}
 	}
 };
 

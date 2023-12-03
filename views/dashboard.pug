@@ -1,0 +1,19 @@
+doctype html
+html(lang="en")
+	head
+		title= title
+		script(src="https://unpkg.com/htmx.org@1.9.9" integrity="sha384-QFjmbokDn2DjBjq+fM+8LUIVrAgqcNW2s0PjAxHETgRn9l4fvX31ZxDxvwQnyMOX" crossorigin="anonymous" defer)
+		script(src="https://cdn.tailwindcss.com")
+		meta(name="viewport" content="width=device-width, initial-scale=1")
+		meta(name="htmx-config" content='{withCredentials: true}')
+	body
+		div(class="container max-content m-auto p-20 shadow-lg rounded-lg")
+			h1(class="text-4xl font-bold")= "welcome " + user.name
+			h2(class="text-2xl font-bold")= "your email is " + user.email
+			button(class="bg-blue-500 m-auto hover:bg-blue-700 text-white font-bold py-2 px-4 rounded m-2" hx-trigger="click" hx-delete="/api/auth/logout") Logout
+
+			div(class="container")
+			each medicine in medicines
+				include medicineCard 
+			
+	

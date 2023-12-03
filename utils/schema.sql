@@ -70,14 +70,14 @@ create table med_for_health_condidion(
 	condition_id varchar(50),
 	medicine_id varchar(50),
 	doctor_id varchar(50),
-
+	schedule  varchar(50),
+	dosage	  varchar(10),
 
     foreign key (doctor_id) references doctor(doctor_id) on delete cascade on update cascade,
 
     foreign key (condition_id) references health_condition(condition_id) on delete cascade on update cascade,
 
     foreign key (medicine_id) references medicine(medicine_id) on delete cascade on update cascade
-
 );
 
 create table conditionOnUser(
