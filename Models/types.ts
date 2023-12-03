@@ -25,4 +25,30 @@ interface AccessTokenType{
 	userId:string;
 }
 
-export {UserType, AccountType, AccessTokenType};
+interface MedicineType extends RowDataPacket {
+	id:bigint;
+	name:string;
+}
+interface ConditionType extends RowDataPacket {
+	id:bigint;
+	name:string;
+}
+
+interface MedicineForCondition extends RowDataPacket{
+	id:bigint;
+	patient_id:string;
+	condition_id:bigint;
+	medicine_id:bigint;
+}
+
+interface Medications {
+	condition: string;
+	medicine: string;
+}
+
+interface ProfileType{
+	info:UserType;
+	medications:Medications[];
+}
+
+export {UserType, AccountType, AccessTokenType, MedicineType, ConditionType, Medications, MedicineForCondition, ProfileType};

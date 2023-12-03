@@ -1,6 +1,13 @@
 import { OkPacket } from "mysql2";
 import db from "../utils/db";
-import { UserType } from "./types";
+import {
+	ConditionType,
+	Medications,
+	MedicineForCondition,
+	MedicineType,
+	ProfileType,
+	UserType,
+} from "./types";
 class User {
 	private name: string;
 	private age: number;
@@ -33,6 +40,19 @@ class User {
 			db.query<UserType[]>(
 				`SELECT * FROM account JOIN user WHERE email = ?`,
 				[email],
+				(err, data) => {
+					if (err) reject(err);
+					resolve(data[0]);
+				}
+			);
+		});
+	}
+
+	static getUserByPatientId(patient_id: string) {
+		return new Promise<UserType>((resolve, reject) => {
+			db.query<UserType[]>(
+				`SELECT * FROM user WHERE patient_id = ?`,
+				[patient_id],
 				(err, data) => {
 					if (err) reject(err);
 					resolve(data[0]);
@@ -92,19 +112,28 @@ class User {
 		});
 	}
 
-	static async UpdateUser(
-		patient_id: string,
-		name: string | undefined,
-		phone: string | undefined,
-		alt_phone: string | undefined,
-		gender: "Male" | "Female" | "Other" | undefined,
-		age: number | undefined,
-		height: number | undefined,
-		weight: number | undefined
-	) {
+	static UpdateUser({
+		name,
+		phone,
+		alt_phone,
+		age,
+		gender,
+		height,
+		weight,
+		patient_id,
+	}: {
+		name: string | undefined;
+		phone: string | undefined;
+		alt_phone: string | undefined;
+		age: number | undefined;
+		gender: "Male" | "Female" | "Other" | undefined;
+		height: number | undefined;
+		weight: number | undefined;
+		patient_id: string;
+	}) {
 		return new Promise<"success">((resolve, reject) => {
 			db.query(
-				`UPDATE user SET patient_name = ?,phone = ?, gender = ?, alt_phone = ?, age = ?, height = ?, weight = ? WHERE patient_id = ?`,
+				`UPDATE user SET patient_name = ?,phone = ?, alt_phone = ?, age = ?, gender = ?, height = ?, weight = ? WHERE patient_id = ?`,
 				[
 					name,
 					phone,
@@ -129,6 +158,92 @@ class User {
 				if (err) reject(err);
 				resolve(data);
 			});
+		});
+	}
+
+	static setUsetHealthCondition(patient_id: string, condition_id: string) {
+		return new Promise<"success">((resolve, reject) => {
+			db.query(
+				`UPDATE conditionOnUser SET condition_id = ? WHERE patient_id = ?`,
+				[condition_id, patient_id],
+				(err) => {
+					if (err) reject(err);
+					resolve("success");
+				}
+			);
+		});
+	}
+
+	//Method to return all the medicines for a particular user
+	static getUserMedicines(patient_id: string) {
+		return new Promise<MedicineType[]>((resolve, reject) => {
+			db.query<MedicineType[]>(
+				`SELECT M.id, M.medicine_name FROM medicine M, medForCondition MFC WHERE patient_id = ? and MFC.medicine_id = M.id`,
+				[patient_id],
+				(err, data) => {
+					if (err) reject(err);
+					resolve(data);
+				}
+			);
+		});
+	}
+
+	//Method to return all the conditions for a particular user
+	static getUserConditions(patient_id: string) {
+		return new Promise<ConditionType[]>((resolve, reject) => {
+			db.query<ConditionType[]>(
+				`SELECT H.id, H.condition_name FROM health_condition H, medForCondition MFC WHERE patient_id = ? and MFC.condition_id = H.id`,
+				[patient_id],
+				(err, data) => {
+					if (err) reject(err);
+					resolve(data);
+				}
+			);
+		});
+	}
+
+	static getUserMedications(patient_id: string) {
+		return new Promise<Medications[]>((resolve, reject) => {
+			db.query<MedicineForCondition[]>(
+				`SELECT medicine_id, condition_id FROM medForCondition WHERE patient_id = ?`,
+				[patient_id],
+				async (err, data) => {
+					if (err) reject(err);
+					const medicines = await User.getUserMedicines(patient_id);
+					const conditions = await User.getUserConditions(patient_id);
+					let medications: Medications[] = [];
+					data.map((med) => {
+						let medicine = medicines.find(
+							(m) => m.id == med.medicine_id
+						);
+						let condition = conditions.find(
+							(c) => c.id == med.condition_id
+						);
+						if (medicine && condition) {
+							medications.push({
+								condition: condition.name,
+								medicine: medicine.name,
+							});
+						}
+					});
+					resolve(medications);
+				}
+			);
+		});
+	}
+
+	static getUserProfile(email: string) {
+		return new Promise<ProfileType>((resolve, reject) => {
+			User.getUserByEmail(email)
+				.then(async (info) => {
+					const medications = await User.getUserMedications(
+						info.patient_id
+					);
+					resolve({ info: info, medications });
+				})
+				.catch((err) => {
+					reject(err);
+				});
 		});
 	}
 }

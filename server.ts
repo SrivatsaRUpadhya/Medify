@@ -5,6 +5,7 @@ import cookieParser from "cookie-parser";
 import cors, { CorsOptions } from "cors";
 import authRouter from "./Routes/auth.router";
 import pageRouter from "./Routes/pages.router";
+import userRouter from "./Routes/user.router";
 import secrets from "./utils/secrets";
 import { z } from "zod";
 
@@ -45,6 +46,7 @@ try {
 
 	app.engine('pug', require('pug').__express)
 	app.use(pageRouter);
+	app.use(userRouter);
 	app.options("*", cors(corsOptions));
 	app.use(cors(corsOptions));
 	app.use(authRouter);

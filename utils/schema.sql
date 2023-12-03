@@ -1,6 +1,5 @@
 create table if not exists health_condition(
 	id bigint auto_increment unique key,
-    condition_id varchar(50) primary key default(uuid()),
     condition_name varchar(100)
 );
 
@@ -29,7 +28,6 @@ create table if not exists userOnAccount(
 	patient_id varchar(50),
 
 	foreign key(account_id) references account(account_id) on delete cascade on update cascade,
-
 	foreign key(patient_id) references user(patient_id) on delete cascade on update cascade
 );
 
@@ -51,7 +49,6 @@ create table if not exists hospital(
 
 create table if not exists medicine(
 	id bigint auto_increment unique key,
-    medicine_id varchar(50) primary key default(uuid()),
     medicine_name varchar(50),
     medicine_desc varchar(150)
 );
@@ -65,27 +62,17 @@ create table doctorOnHospital(
 	foreign key(doctor_id) references doctor(doctor_id) on delete cascade on update cascade
 );
 
-create table med_for_health_condidion(
+create table medForCondition(
 	id bigint auto_increment unique key,
-	condition_id varchar(50),
-	medicine_id varchar(50),
+	condition_id bigint,
+	patient_id varchar(50),
+	medicine_id bigint,
 	doctor_id varchar(50),
 	schedule  varchar(50),
 	dosage	  varchar(10),
 
     foreign key (doctor_id) references doctor(doctor_id) on delete cascade on update cascade,
-
-    foreign key (condition_id) references health_condition(condition_id) on delete cascade on update cascade,
-
-    foreign key (medicine_id) references medicine(medicine_id) on delete cascade on update cascade
+	foreign key (patient_id) references user(patient_id) on delete cascade on update cascade,
+    foreign key (condition_id) references health_condition(id) on delete cascade on update cascade,
+    foreign key (medicine_id) references medicine(id) on delete cascade on update cascade
 );
-
-create table conditionOnUser(
-	id bigint auto_increment unique key,
-	condition_id varchar(50),
-	patient_id varchar(50),
-
-	foreign key(condition_id) references health_condition(condition_id) on delete cascade on update cascade,
-	foreign key(patient_id) references user(patient_id) on delete cascade on update cascade
-);
-

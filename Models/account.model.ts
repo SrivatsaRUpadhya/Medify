@@ -1,7 +1,7 @@
 import { OkPacket } from "mysql2";
 import db from "../utils/db";
 import hash from "../utils/hash";
-import { AccountType } from "./types";
+import { AccountType, UserType } from "./types";
 class Account {
 	private password: string;
 	private email: string;
@@ -64,6 +64,19 @@ class Account {
 			});
 		}
 		throw new Error("User already exists");
+	}
+
+	static getUsersInAccount(accountId: string) {
+		return new Promise<UserType[]>((resolve, reject) => {
+			db.query<UserType[]>(
+				`SELECT * FROM account A, user U WHERE A.account_id = ?`,
+				[accountId],
+				(err, data) => {
+					if (err) reject(err);
+					resolve(data);
+				}
+			);
+		});
 	}
 	//static async deleteUserById(id: string) {
 	//	return await db.execute(`DELETE FROM account where account_id=?`, [id]);
