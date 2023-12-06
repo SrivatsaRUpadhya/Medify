@@ -6,11 +6,11 @@ import axios from "axios";
 import jwt, { JwtPayload } from "jsonwebtoken";
 import secrets from "../utils/secrets";
 import User from "../Models/user.model";
-import { AccessTokenType } from "../Models/types";
+import { AccessTokenType, Medications, UsersInAccount } from "../Models/types";
 
 const profileDetails = (req: Request, res: Response) => {
 	asyncWraper(req, res, async (req: Request, res: Response) => {
-		const user = await User.getUserProfile(res.locals.user.email);
+		const user = await User.getUserProfile(res.locals.user.userId);
 		console.log(user);
 		res.render("profile.pug", { user });
 	});
@@ -33,4 +33,32 @@ const updateProfile = (req: Request, res: Response) => {
 	});
 };
 
-export { profileDetails, updateProfile};
+const dashboardContent =  (req: Request, res: Response) => {
+	asyncWraper(req, res, async (req: Request, res: Response) => {
+		const users = await Account.getUsersInAccount(res.locals.user.userId);
+		const medicationsInAccount = await Account.getMedicationsInAccount(res.locals.user.userId);
+		const medicines = await Account.getMedicinesInAccount(res.locals.user.userId);
+		const conditions = await Account.getConditionsInAccount(res.locals.user.userId);
+
+		let usersList:{info:UsersInAccount, medications:Medications[]}[] = []
+
+		users.forEach(user=>{
+			const userMedications = medicationsInAccount.filter(medication=>medication.patient_id === user.patient_id)
+			const finalMedications = userMedications.map(element=>{
+				const medicine = medicines.find(medicine=>medicine.id === element.medicine_id)
+				const condition = conditions.find(condition=>condition.id === element.condition_id)
+				return {
+					condition: condition?.condition_name||"",
+					medicine: medicine?.medicine_name||"",
+					schedule: element.schedule|| "",
+					dosage: element.dosage||""
+				}
+			})
+			usersList.push({info:user, medications:finalMedications})
+		})
+		console.log(usersList)
+		res.render("dashboard.pug", { usersList:usersList });
+	})
+}
+
+export { profileDetails, updateProfile, dashboardContent};

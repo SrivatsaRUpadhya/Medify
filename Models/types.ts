@@ -19,36 +19,56 @@ interface AccountType extends RowDataPacket {
 	password: string;
 }
 
-interface AccessTokenType{
-	name:string;
-	email:string;
-	userId:string;
+interface AccessTokenType {
+	email: string;
+	userId: string;
 }
 
 interface MedicineType extends RowDataPacket {
-	id:bigint;
-	name:string;
+	id: bigint;
+	medicine_name: string;
 }
 interface ConditionType extends RowDataPacket {
-	id:bigint;
-	name:string;
+	id: bigint;
+	condition_name: string;
 }
 
-interface MedicineForCondition extends RowDataPacket{
-	id:bigint;
-	patient_id:string;
-	condition_id:bigint;
-	medicine_id:bigint;
+interface MedicineForCondition extends RowDataPacket {
+	id: bigint;
+	patient_id: string;
+	condition_id: bigint;
+	medicine_id: bigint;
+	schedule?: string;
+	dosage?: string;
 }
 
 interface Medications {
 	condition: string;
 	medicine: string;
+	schedule?: string;
+	dosage?: string;
 }
 
-interface ProfileType{
-	info:UserType;
-	medications:Medications[];
+interface ProfileType {
+	info: UserType;
+	medications: Medications[];
 }
 
-export {UserType, AccountType, AccessTokenType, MedicineType, ConditionType, Medications, MedicineForCondition, ProfileType};
+interface UsersInAccount extends RowDataPacket {
+	patient_id: string;
+	patient_name: string;
+	age: number;
+	gender: "Male" | "Female" | "Other";
+}
+
+export {
+	UserType,
+	AccountType,
+	AccessTokenType,
+	MedicineType,
+	ConditionType,
+	Medications,
+	MedicineForCondition,
+	ProfileType,
+	UsersInAccount,
+};

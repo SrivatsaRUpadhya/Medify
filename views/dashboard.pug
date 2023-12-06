@@ -6,14 +6,20 @@ html(lang="en")
 		script(src="https://cdn.tailwindcss.com")
 		meta(name="viewport" content="width=device-width, initial-scale=1")
 		meta(name="htmx-config" content='{withCredentials: true}')
-	body
+		link(href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.2.0/flowbite.min.css" rel="stylesheet")
+	body(class="bg-[#cbdeb1]")
+		include ./includes/navbar
+		+navbar(user)
 		div(class="container max-content m-auto p-20 shadow-lg rounded-lg")
-			h1(class="text-4xl font-bold")= "welcome " + user.name
-			h2(class="text-2xl font-bold")= "your email is " + user.email
-			button(class="bg-blue-500 m-auto hover:bg-blue-700 text-white font-bold py-2 px-4 rounded m-2" hx-trigger="click" hx-delete="/api/auth/logout") Logout
-
-			div(class="container")
-			each medicine in medicines
-				include medicineCard 
+			h1(class="text-3xl font-bold") Your Family
+			div(id="accordion-collapse" data-accordion="collapse")
+				each userOfList,index in usersList 
+					include ./includes/patientCard.pug
+					h2(id=`accordion-collapse-heading-${index}`)
+						button(type="button" class="flex items-center my-2 justify-between w-full p-5 font-medium rtl:text-right text-white border border-b-0 border-gray-200 rounded-xl focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-800 dark:border-gray-700 dark:text-white hover:bg-[#586645] dark:hover:bg-[#586645] gap-3" data-accordion-target=`#accordion-collapse-body-${index}` aria-expanded="true" aria-controls=`accordion-collapse-body-${index}`) #{userOfList.info.patient_name}   #{userOfList.info.age}   #{userOfList.info.gender}
+							svg(data-accordion-icon class="w-3 h-3 rotate-180 shrink-0" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6")
+							path(stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5 5 1 1 5")
+					+patientCard(userOfList,index)
+	script(src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.2.0/flowbite.min.js")
 			
 	

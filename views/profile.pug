@@ -5,10 +5,11 @@ html(lang="en")
 		script(src="https://unpkg.com/htmx.org@1.9.9" integrity="sha384-QFjmbokDn2DjBjq+fM+8LUIVrAgqcNW2s0PjAxHETgRn9l4fvX31ZxDxvwQnyMOX" crossorigin="anonymous" defer)
 		script(src="https://cdn.tailwindcss.com")
 	body
-		//include navbar
+		include ./includes/navbar
+		+navbar(user)
 		div(class="container")
 			div(class="container")
-				form(class="grid m-auto p-20 border-2 border-gray-300 rounded-md max-w-md" id="login-form" hx-post="/api/auth/login" hx-target="#login-form")
+				form(class="grid m-auto p-20 border-2 border-gray-300 rounded-md max-w-md" id="login-form" hx-target="#login-form")
 					h1(class="text-center text-3xl") Your Profile
 					label(for="name") Name
 					input(type="name" name="name" placeholder="Name" value=user.info.patient_name class="border-2 border-gray-300 rounded-md p-2 m-2")
@@ -22,4 +23,7 @@ html(lang="en")
 					input(type="number" name="weight" placeholder="Weight" value=user.info.weight class="border-2 border-gray-300 rounded-md p-2 m-2")
 					div(class="g-recaptcha" name="captcha_response" data-sitekey="6LdXkegoAAAAAHJuSrGgWTjJ4sJJaMZ9eD_Roz8i")
 					button(hx-post="/api/user/updateProfile" class="text-center bg-black hover:bg-gray-700 text-white font-bold py-2 px-4 rounded m-2") Save
-					p(class="text-red-500 text-xs italic" id="error-message") 
+					p(class="text-red-500 text-xs italic" id="error-message")
+		//include medicine card
+
+		//include footer

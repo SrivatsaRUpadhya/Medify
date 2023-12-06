@@ -78,7 +78,7 @@ const login = async (req: Request, res: Response) => {
 		if (!email || !password || !captcha_response) {
 			return res.status(201).send("Invalid credentials");
 		}
-		const final_user = await User.getUserByEmail(email);
+		const final_user = await Account.getAccountByEmail(email);
 		if (!final_user) {
 			return res.status(501).send("User not found");
 		}
@@ -92,9 +92,8 @@ const login = async (req: Request, res: Response) => {
 			return res.status(501).send("Invalid credentials");
 		}
 		const sessionData = {
-			name: final_user.patient_name,
 			email: final_user.email,
-			userId: final_user.patient_id,
+			userId: final_user.account_id,
 		};
 		const verify_captcha = await axios.post(
 			"https://www.google.com/recaptcha/api/siteverify",
@@ -153,10 +152,10 @@ const me = async (req: Request, res: Response) => {
 			const tokenData = jwt.decode(
 				token
 			) as JwtPayload as AccessTokenType;
-			const result = await User.getUserByEmail(tokenData?.email);
+			const result = await Account.getAccountByEmail(tokenData?.email);
 			return res.status(200).json({
 				message: "success",
-				user: result[0],
+				user: result,
 			});
 		} else {
 			return res.status(200).json({ message: "Not logged in" });
@@ -165,25 +164,29 @@ const me = async (req: Request, res: Response) => {
 };
 
 const auth = (req: Request, res: Response, next: NextFunction) => {
-	console.log(req.cookies);
-	const { accessToken } = req.cookies;
-	if (!accessToken) {
-		res.setHeader("HX-Redirect", "/login");
-		return res.status(200).redirect("/login");
-	}
-	try {
-		jwt.verify(accessToken, secrets.jwt_key as string);
-		const user = jwt.decode(accessToken) as JwtPayload as AccessTokenType;
-		res.locals.user = user;
-		next();
-	} catch (err) {
-		if (err instanceof jwt.TokenExpiredError) {
+	asyncWraper(req, res, async (req: Request, res: Response) => {
+		console.log(req.cookies);
+		const { accessToken } = req.cookies;
+		if (!accessToken) {
 			res.setHeader("HX-Redirect", "/login");
-			return res.status(200).redirect("session expired");
-		} else {
-			throw err;
+			return res.status(200).redirect("/login");
 		}
-	}
+		try {
+			jwt.verify(accessToken, secrets.jwt_key as string);
+			const user = jwt.decode(
+				accessToken
+			) as JwtPayload as AccessTokenType;
+			res.locals.user = user;
+			next();
+		} catch (err) {
+			if (err instanceof jwt.TokenExpiredError) {
+				res.setHeader("HX-Redirect", "/login");
+				return res.status(200).redirect("/login");
+			} else {
+				throw err;
+			}
+		}
+	});
 };
 
 export { register, login, logout, me, auth };

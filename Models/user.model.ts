@@ -35,7 +35,7 @@ class User {
 		this.weight = weight;
 	}
 
-	static getUserByEmail(email: string) {
+	static getUsersByEmail(email: string) {
 		return new Promise<UserType>((resolve, reject) => {
 			db.query<UserType[]>(
 				`SELECT * FROM account JOIN user WHERE email = ?`,
@@ -232,9 +232,9 @@ class User {
 		});
 	}
 
-	static getUserProfile(email: string) {
+	static getUserProfile(patient_id: string) {
 		return new Promise<ProfileType>((resolve, reject) => {
-			User.getUserByEmail(email)
+			User.getUserByPatientId(patient_id)
 				.then(async (info) => {
 					const medications = await User.getUserMedications(
 						info.patient_id

@@ -45,6 +45,7 @@ try {
 	app.get("/", (req: Request, res: Response) => res.render("index.pug"));
 
 	app.engine('pug', require('pug').__express)
+	app.use(express.static("public"));
 	app.use(pageRouter);
 	app.use(userRouter);
 	app.options("*", cors(corsOptions));

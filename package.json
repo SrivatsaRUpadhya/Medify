@@ -19,5 +19,10 @@
 		"mysql2": "^3.6.5",
 		"pug": "^3.0.2",
 		"zod": "^3.22.4"
+	},
+	"scripts": {
+		"dev": "tsc; nodemon ./output/server.js",
+		"build": "tsc",
+		"start": "node dist/index.js"
 	}
 }

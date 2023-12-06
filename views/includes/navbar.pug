@@ -1,0 +1,19 @@
+mixin navbar(user)
+	div(class="p-2 mb-2 display border-b  border-black transition-all sm:flex justify-around")
+		div(class="self-center")
+			h1(class="text-[#586645] text-2xl font-bold") Medify
+		div(class="sm:flex justify-around self-center")
+			div(class="mx-4")
+				a(class="text-[#536938]" href="/") Home
+			div(class="mx-4")
+				a(class="text-[#536938]" href="/") About
+			div(class="mx-4")
+				a(class="text-[#536938]" href="/") Contact 
+		div(class="sm:flex self-center")
+			if(!user)
+				a(class="text-[#536938]" href="/login") Login
+			else
+				a(class="p-2 rounded bg-[#586645] text-black ease-out duration-300 hover:scale-90" href="/profile")
+					img(class="rounded-full h-4 w-4" src="/images/profile.svg" alt="Profile")
+				a(class="p-2 rounded ml-2 bg-[#586645] text-black ease-out duration-300 hover:scale-90" hx-delete="api/auth/logout")
+					img(class="h-4 w-4" src="/images/logout.svg" alt="Profile")
