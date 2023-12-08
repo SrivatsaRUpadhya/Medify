@@ -1,4 +1,5 @@
 import { RowDataPacket } from "mysql2";
+import { PushSubscription } from "web-push";
 
 interface UserType extends RowDataPacket {
 	id: number;
@@ -24,6 +25,12 @@ interface AccessTokenType {
 	userId: string;
 }
 
+interface UserOnAccount extends RowDataPacket {
+	id: bigint;
+	account_id: string;
+	patient_id: string;
+}
+
 interface MedicineType extends RowDataPacket {
 	id: bigint;
 	medicine_name: string;
@@ -43,8 +50,8 @@ interface MedicineForCondition extends RowDataPacket {
 }
 
 interface Medications {
-	condition: string;
-	medicine: string;
+	condition: ConditionType;
+	medicine: MedicineType;
 	schedule?: string;
 	dosage?: string;
 }
@@ -61,9 +68,16 @@ interface UsersInAccount extends RowDataPacket {
 	gender: "Male" | "Female" | "Other";
 }
 
+interface SubscriptionType extends RowDataPacket {
+	id: bigint;
+	account_id: string;
+	subscription: PushSubscription;
+}
+
 export {
 	UserType,
 	AccountType,
+	UserOnAccount,
 	AccessTokenType,
 	MedicineType,
 	ConditionType,
@@ -71,4 +85,5 @@ export {
 	MedicineForCondition,
 	ProfileType,
 	UsersInAccount,
+	SubscriptionType
 };

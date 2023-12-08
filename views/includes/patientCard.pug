@@ -4,3 +4,6 @@ mixin patientCard(userOfList,index)
 			each medicine in userOfList.medications
 				include medicineCard
 				+medicineCard(medicine)
+			form()
+				input(type="text" name="patient_id" placeholder="Id" value=userOfList.info.patient_id class="border-2 hidden border-gray-300 rounded-md p-2 m-2")
+				button(type="submit" class="rounded bg-green text-white" hx-get="/api/action/addMedication") Add Medication

@@ -1,10 +1,6 @@
 mixin medicineCard(medicine)
 	div(class="px-6 py-4 my-2  rounded-lg shadow-lg")
-		p(class=" text-gray-700 text-base")= "Medicine for: " + medicine.condition
-		p(class=" text-gray-700 text-base")= "Medicine name: " + medicine.medicine
+		p(class=" text-gray-700 text-base")= "Medicine for: " + medicine.condition.condition_name
+		p(class=" text-gray-700 text-base")= "Medicine name: " + medicine.medicine.medicine_name
 		p(class="text-gray-700 text-base")=  "Schedule: " + medicine.schedule
 		p(class="text-gray-700 text-base")=  "Dosage: " + medicine.dosage
-
-
-		
-

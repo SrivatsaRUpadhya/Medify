@@ -1,0 +1,31 @@
+mixin navbar
+	nav.bg-blue-500.text-white.p-4
+		div.container.mx-auto.flex.justify-between.items-center
+			h1.text-lg.font-bold Medify
+	
+			ul.flex.space-x-4
+				li
+					a(href="#") Home
+				li
+					a(href="#") About
+				li
+					a(href="#") Contact
+	
+			// Login/Logout Button (Assuming a simple scenario)
+			// You might want to implement a more robust authentication system
+			// with proper login/logout logic based on your application structure.
+			if user
+				form(action="/logout" method="post")
+					button.bg-white.text-blue-500.py-2.px-4.rounded.border.border-blue-500(type="submit") Logout
+			else
+					a.bg-white.text-blue-500.py-2.px-4.rounded.border.border-blue-500(href="/login") Login
+	
+	// Your main content goes here
+	
+	// Add any other sections or elements as needed
+	
+	footer.bg-gray-200.text-center.p-4
+		p.text-sm Copyright © 2023 Medify
+	
+	script(src="https://cdn.jsdelivr.net/npm/alpinejs@2.8.2/dist/alpine.min.js")
+	

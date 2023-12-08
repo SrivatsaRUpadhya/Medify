@@ -6,14 +6,16 @@ import cors, { CorsOptions } from "cors";
 import authRouter from "./Routes/auth.router";
 import pageRouter from "./Routes/pages.router";
 import userRouter from "./Routes/user.router";
+import notificationsRouter from "./Routes/notifications.router";
 import secrets from "./utils/secrets";
 import { z } from "zod";
+import notify from "./Controllers/notifications.controller";
 
 try {
 	const app = express();
 	var whitelist = [
-		z.string().parse(secrets.clientURL_1),
-		z.string().parse(secrets.clientURL_2),
+		String(secrets.clientURL_1),
+		String(secrets.clientURL_2),
 		"http://localhost:3000",
 	];
 
@@ -29,7 +31,7 @@ try {
 
 	var corsOptions: CorsOptions = {
 		origin: function (origin, callback) {
-			if (whitelist.indexOf(z.string().parse(origin)) !== -1) {
+			if (whitelist.indexOf(String(origin)) !== -1) {
 				callback(null, true);
 			} else {
 				callback(new Error("Not allowed by CORS"));
@@ -48,12 +50,16 @@ try {
 	app.use(express.static("public"));
 	app.use(pageRouter);
 	app.use(userRouter);
+	app.use(authRouter);
+	app.use(express.json());
+	app.use(notificationsRouter);
 	app.options("*", cors(corsOptions));
 	app.use(cors(corsOptions));
-	app.use(authRouter);
 	app.listen(secrets.serverPort, () => {
 		console.log(`Server live on port: ${secrets.serverPort}`);
 	});
+
+	setInterval(notify, 5000)
 	const formatMemoryUsage = (data: any) =>
 		`${Math.round((data / 1024 / 1024) * 100) / 100} MB`;
 

@@ -4,26 +4,47 @@ html(lang="en")
 		title= title
 		script(src="https://unpkg.com/htmx.org@1.9.9" integrity="sha384-QFjmbokDn2DjBjq+fM+8LUIVrAgqcNW2s0PjAxHETgRn9l4fvX31ZxDxvwQnyMOX" crossorigin="anonymous" defer)
 		script(src="https://cdn.tailwindcss.com")
-	body
+	body(class="bg-[#cbdeb1]")
 		include ./includes/navbar
 		+navbar(user)
-		div(class="container")
-			div(class="container")
-				form(class="grid m-auto p-20 border-2 border-gray-300 rounded-md max-w-md" id="login-form" hx-target="#login-form")
+		div(class="container sm:flex w-max m-auto")
+			div(class="mx-4")
+				form(class="grid m-auto min-w-xs p-20 border-2 shadow-md rounded-md max-w-md" id="login-form" hx-target="#login-form")
 					h1(class="text-center text-3xl") Your Profile
+					input(type="text" name="patient_id" placeholder="Id" value=user.info.patient_id class="border-2 hidden border-gray-300 rounded-md p-2 m-2")
 					label(for="name") Name
-					input(type="name" name="name" placeholder="Name" value=user.info.patient_name class="border-2 border-gray-300 rounded-md p-2 m-2")
+					input(type="text" name="name" placeholder="Name" value=user.info.patient_name class="border-2 border-gray-300 rounded-md p-2 m-2")
 					label(for="email") Email
 					input(type="email" name="email" placeholder="Email" value=user.info.email class="border-2 border-gray-300 rounded-md p-2 m-2")
 					input(type="text" name="phone" placeholder="Phone" value=user.info.phone class="border-2 border-gray-300 rounded-md p-2 m-2")
 					input(type="text" name="alt_phone" placeholder="Alternate Phone" value=user.info.alt_phone class="border-2 border-gray-300 rounded-md p-2 m-2")
 					input(type="number" name="age" placeholder="Age" value=user.info.age class="border-2 border-gray-300 rounded-md p-2 m-2")
-					//TODO: input for height
+					select(name="gender" class="border-2 border-gray-300 rounded-md p-2 m-2")
+						option(value="MALE") Male
+						option(value="FEMALE") Female
+						option(value="OTHER") Other
 					input(type="number" name="height" placeholder="Height" value=user.info.height class="border-2 border-gray-300 rounded-md p-2 m-2")
 					input(type="number" name="weight" placeholder="Weight" value=user.info.weight class="border-2 border-gray-300 rounded-md p-2 m-2")
 					div(class="g-recaptcha" name="captcha_response" data-sitekey="6LdXkegoAAAAAHJuSrGgWTjJ4sJJaMZ9eD_Roz8i")
 					button(hx-post="/api/user/updateProfile" class="text-center bg-black hover:bg-gray-700 text-white font-bold py-2 px-4 rounded m-2") Save
 					p(class="text-red-500 text-xs italic" id="error-message")
+			div(class="sm:flex")
+				form(class="grid m-auto min-w-xs p-20 border-2 shadow-md rounded-md max-w-md" id="login-form" hx-target="#login-form")
+					h1(class="text-center text-3xl") Your Conditions
+					div(class="")
+						each medication in user.medications
+							div(class="w-full bg-white rounded-lg shadow-md p-5 m-2")
+								form()
+									input(type="text" name="patient_id" placeholder="Id" value=user.info.patient_id class="border-2 hidden border-gray-300 rounded-md p-2 m-2")
+									div()
+										input(name="medicine_id" class="hidden" value=medication.condition.id)
+										p(class="text-center text-2xl")= medication.condition.condition_name
+									div()
+										input(name="condition_id" class="hidden"  value=medication.medicine.id)
+										p(class="text-center text-2xl")= medication.medicine.medicine_name
+									button(hx-post="/api/action/removeMedication" hx-target="#message" type="submit" class="text-center bg-black hover:bg-gray-700 text-white font-bold py-2 px-4 rounded m-2") Remove
+									p(id="message" class="text-center text-3xl")
+
 		//include medicine card
 
 		//include footer

@@ -221,8 +221,8 @@ class User {
 						);
 						if (medicine && condition) {
 							medications.push({
-								condition: condition.name,
-								medicine: medicine.name,
+								condition: condition,
+								medicine: medicine,
 							});
 						}
 					});

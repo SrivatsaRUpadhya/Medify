@@ -76,3 +76,13 @@ create table medForCondition(
     foreign key (condition_id) references health_condition(id) on delete cascade on update cascade,
     foreign key (medicine_id) references medicine(id) on delete cascade on update cascade
 );
+
+create table subscriptions(
+	id bigint auto_increment unique key,
+	account_id varchar(50),
+	subscription json,
+
+	foreign key (account_id) references account(account_id) on delete cascade on update cascade
+);
+
+)

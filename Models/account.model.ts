@@ -7,6 +7,7 @@ import {
 	Medications,
 	MedicineForCondition,
 	MedicineType,
+	UserOnAccount,
 	UserType,
 	UsersInAccount,
 } from "./types";
@@ -124,6 +125,25 @@ class Account {
 	//static async deleteUserById(id: string) {
 	//	return await db.execute(`DELETE FROM account where account_id=?`, [id]);
 	//}
+	static getUsersOnAccount() {
+		return new Promise<UserOnAccount[]>((resolve, reject) => {
+			db.query<UserOnAccount[]>(
+				`SELECT * FROM userOnAccount`,
+				(err, data) => {
+					if (err) reject(err);
+					resolve(data);
+				}
+			);
+		});
+	}
+	static async getAllAccounts() {
+		return new Promise<AccountType[]>((resolve, reject) => {
+			db.query<AccountType[]>(`SELECT * FROM account`, (err, data) => {
+				if (err) reject(err);
+				resolve(data);
+			});
+		});
+	}
 }
 
 export default Account;

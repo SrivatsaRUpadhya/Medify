@@ -1,0 +1,32 @@
+doctype html
+html(lang="en")
+	head
+		title= title
+		script(src="https://unpkg.com/htmx.org@1.9.9" integrity="sha384-QFjmbokDn2DjBjq+fM+8LUIVrAgqcNW2s0PjAxHETgRn9l4fvX31ZxDxvwQnyMOX" crossorigin="anonymous" defer)
+		script(src="https://cdn.tailwindcss.com")
+		script(src="https://www.google.com/recaptcha/api.js") 
+	body(class="bg-[#cbdeb1]")
+		div(class="container")
+				form(class="grid m-auto min-w-xs p-20 border-2 shadow-md rounded-md max-w-md" id="login-form" hx-target="#login-form")
+					h1(class="text-center text-3xl") Register
+					input(type="text" name="patient_id" placeholder="Id" class="border-2 hidden border-gray-300 rounded-md p-2 m-2")
+					input(type="text" name="name" placeholder="Name"  class="border-2 border-gray-300 rounded-md p-2 m-2")
+					input(type="email" name="email" placeholder="Email" class="border-2 border-gray-300 rounded-md p-2 m-2")
+					input(type="text" name="phone" placeholder="Phone" class="border-2 border-gray-300 rounded-md p-2 m-2")
+					input(type="text" name="alt_phone" placeholder="Alternate Phone" class="border-2 border-gray-300 rounded-md p-2 m-2")
+					input(type="password" name="password" placeholder="Password" class="border-2 border-gray-300 rounded-md p-2 m-2")
+					input(type="password" name="confirm_password" placeholder="Confirm Password" class="border-2 border-gray-300 rounded-md p-2 m-2")
+					input(type="number" name="age" placeholder="Age"  class="border-2 border-gray-300 rounded-md p-2 m-2")
+					select(name="gender" class="border-2 border-gray-300 rounded-md p-2 m-2")
+						option(value="MALE") Male
+						option(value="FEMALE") Female
+						option(value="OTHER") Other
+					input(type="number" name="height" placeholder="Height" class="border-2 border-gray-300 rounded-md p-2 m-2")
+					input(type="number" name="weight" placeholder="Weight" class="border-2 border-gray-300 rounded-md p-2 m-2")
+					div(class="g-recaptcha" name="captcha_response" data-sitekey="6LdXkegoAAAAAHJuSrGgWTjJ4sJJaMZ9eD_Roz8i")
+
+					button(hx-post="/api/auth/register" hx-target="#message" class="text-center bg-black hover:bg-gray-700 text-white font-bold py-2 px-4 rounded m-2") Save
+					p(class="text-red-500 text-xs italic" id="message")
+		//include medicine card
+
+		//include footer

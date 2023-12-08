@@ -17,23 +17,31 @@ const register = async (req: Request, res: Response) => {
 				email,
 				password,
 				phone,
-				altPhone,
+				alt_phone,
 				gender,
 				age,
 				height,
 				weight,
 			} = body;
-			if (!name || !phone || !password || !email || !altPhone) {
+			if (
+				!name ||
+				!phone ||
+				!password ||
+				!email ||
+				!alt_phone ||
+				!req.body["g-recaptcha-response"]
+			) {
 				return res.status(200).json({
 					status: "error",
 					data: "invalid credentials",
 				});
 			}
+			const captcha_response = await req.body["g-recaptcha-response"];
 			const account = new Account(email, password);
 			const user = new User(
 				name,
 				phone,
-				altPhone,
+				alt_phone,
 				gender,
 				age,
 				height,
@@ -46,7 +54,19 @@ const register = async (req: Request, res: Response) => {
 			} else {
 				throw new Error("Account not created");
 			}
-
+			const verify_captcha = await axios.post(
+				"https://www.google.com/recaptcha/api/siteverify",
+				{
+					secret: process.env.SECRET_KEY,
+					response: captcha_response,
+				},
+				{
+					headers: {
+						"Content-Type": "application/x-www-form-urlencoded",
+					},
+				}
+			);
+			if (!verify_captcha.data.success) throw new Error("Captcha failed");
 			const token = jwt.sign(
 				{ name, email, userId },
 				String(secrets.jwt_key),
@@ -59,10 +79,8 @@ const register = async (req: Request, res: Response) => {
 				expires: new Date(Date.now() + 3600000 * 24),
 				httpOnly: true,
 			});
-			return res.status(200).json({
-				message: "success",
-				user: { name, phone, email },
-			});
+			res.setHeader("HX-Redirect", "/dashboard");
+			return res.status(200).send("success");
 		} catch (error) {
 			console.log(error);
 			return res.status(200).json({ message: "Error" });

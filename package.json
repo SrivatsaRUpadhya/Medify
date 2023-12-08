@@ -23,7 +23,7 @@
 		"zod": "^3.22.4"
 	},
 	"scripts": {
-		"dev": "tsc; nodemon ./output/server.js",
+		"dev": "tsc; node ./output/server.js",
 		"build": "tsc",
 		"start": "node dist/index.js"
 	}
