@@ -1,39 +1,15 @@
-html
-  head
-    title Add Medication Form
-    link(rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css")
+//form to accept medications in pug
+form(hx-post="/api/action/addMedication" hx-target="this" onSubmit=(e)=>e.preventDefault() hx-trigger="submit" class="max-h-screen overflow-scroll")
+	select(name="condition_id" class="border-2 border-gray-300 rounded-md p-2 m-2")
+		each condition in conditions
+			option(value=condition.id)= condition.condition_name
+	select(name="medicine_id" class="border-2 border-gray-300 rounded-md p-2 m-2")
+		each medicine in medicines
+			option(value=medicine.id)= medicine.medicine_name
+	input(type="text" name="patient_id" placeholder="Id" value=patient_id class="border-2 hidden border-gray-300 rounded-md p-2 m-2")
+	input(type="text" name="dosage" placeholder="Dosage" class="border-2 border-gray-300 rounded-md p-2 m-2")
+	input(type="text" name="schedule" placeholder="Schedule" class="border-2 border-gray-300 rounded-md p-2 m-2")
+	button( type="submit" class="text-center bg-black hover:bg-gray-700 text-white font-bold py-2 px-4 rounded m-2") Add Medication
 
-  body
-    header.bg-blue-500.text-white.p-4
-      h1.text-2xl Add Medication Form
-
-    section.container.mx-auto.p-4
-      form#medication-form(hx-trigger="submit" hx-get="/api/action/addMedForm")
-        input(type="hidden" name="patientId" value=user.info.patient_id)
-
-        .form-group
-          label(for="condition") Condition Name:
-          select#condition(type="text" name="condition" required class="form-input")
-		    each condition in conditions
-              option(value=condition.id) #{condition.condition_name}
-        .form-group
-          label(for="medicine") Medicine Name:
-          select#medicine(name="medicine" required class="form-select")
-		    each medicine in medicines
-              option(value=medicine.id) #{medicine.medicine_name}
-            // Add more options as needed
-
-        .form-group
-          label(for="dosage") Dosage Schedule:
-          input#dosage(type="text" name="dosage" placeholder="e.g., 1-0-1" required class="form-input")
-
-        button(type="submit" class="bg-blue-500 text-white p-2 rounded mt-4" ) Add Medication
-
-    // Add any other sections or elements as needed
-
-    footer.bg-gray-200.text-center.p-4
-      p.text-sm Copyright © 2023 Medicine Tracker
-
-  script(src="https://cdn.jsdelivr.net/npm/alpinejs@2.8.2/dist/alpine.min.js")
-  script(src="https://cdn.jsdelivr.net/npm/htmx.org@1.7.0/dist/htmx.min.js")
+script( src="https://unpkg.com/htmx.org/dist/ext/response-targets.js")
 

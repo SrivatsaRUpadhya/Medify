@@ -5,7 +5,7 @@ class Conditions {
 	static createCondition(name: string) {
 		return new Promise<string>((resolve, reject) => {
 			db.query(
-				`INSERT INTO conditions (name) VALUES (?)`,
+				`INSERT INTO health_condition (name) VALUES (?)`,
 				[name],
 				(err, data) => {
 					if (err) reject(err);
@@ -18,7 +18,7 @@ class Conditions {
 	static getAllConditions() {
 		return new Promise<ConditionType[]>((resolve, reject) => {
 			db.query<ConditionType[]>(
-				`SELECT * FROM conditions`,
+				`SELECT * FROM health_condition`,
 				(err, data) => {
 					if (err) reject(err);
 					resolve(data);

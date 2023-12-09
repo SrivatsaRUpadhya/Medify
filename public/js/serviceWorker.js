@@ -4,7 +4,7 @@ self.addEventListener('push', function(event) {
   event.waitUntil(
     // Show a notification with title 'ServiceWorker Cookbook' and body 'Alea iacta est'.
     self.registration.showNotification('Time to take your medicines!', {
-      body: event.data.text(),
+      body:"" 
     })
   );
 });

@@ -1,5 +1,5 @@
 mixin navbar(user)
-	div(class="p-2 mb-2 grid border-b shadow-md border-[#586645] transition-all sm:flex justify-around")
+	div(class="p-2 mb-2 grid shadow-md transition-all sm:flex justify-around")
 		div(class="self-center")
 			h1(class="text-[#586645] text-2xl text-center font-bold") Medify
 		div(class="sm:flex text-center justify-around self-center")
@@ -15,4 +15,4 @@ mixin navbar(user)
 			else
 				div( class="p-2 w-10 h-10 rounded flex self-center justify-center bg-[#586645] text-black ease-out duration-300 hover:scale-90")
 					a(class="" hx-delete="api/auth/logout")
-						img(class="w-4" src="/images/logout.svg" alt="Profile")
+						img(class="w-8" src="/images/logout.svg" alt="Profile")

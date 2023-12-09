@@ -1,0 +1,15 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const router = require("express").Router();
+const auth_controller_1 = require("../Controllers/auth.controller");
+const user_controller_1 = require("../Controllers/user.controller");
+const page_controller_1 = require("../Controllers/page.controller");
+router.get("/register", (req, res) => res.render("register.pug"));
+router.get("/login", (req, res) => res.render("login.pug"));
+router.get("/dashboard", auth_controller_1.auth, user_controller_1.dashboardContent);
+router.get("/profile", auth_controller_1.auth, user_controller_1.profileDetails);
+router.post("/api/action/addMedForm", auth_controller_1.auth, page_controller_1.addMedForm);
+router.get("/addPatient", auth_controller_1.auth, page_controller_1.addPatientForm);
+router.post("/api/action/removeMedication", auth_controller_1.auth, page_controller_1.removeMedication);
+router.post("/api/action/addMedication", auth_controller_1.auth, page_controller_1.addMedication);
+exports.default = router;

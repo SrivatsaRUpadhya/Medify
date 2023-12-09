@@ -7,9 +7,9 @@ html(lang="en")
 	body(class="bg-[#cbdeb1]")
 		include ./includes/navbar
 		+navbar(user)
-		div(class="container sm:flex w-max m-auto")
-			div(class="mx-4")
-				form(class="grid m-auto min-w-xs p-20 border-2 shadow-md rounded-md max-w-md" id="login-form" hx-target="#login-form")
+		div(class="container sm:flex justify-around m-auto")
+			div(class="")
+				form(class=" max-h-screen min-h-screen overflow-scroll grid m-auto min-w-xs p-20 shadow-2xl rounded-lg max-w-md" id="login-form" hx-target="#login-form")
 					h1(class="text-center text-3xl") Your Profile
 					input(type="text" name="patient_id" placeholder="Id" value=user.info.patient_id class="border-2 hidden border-gray-300 rounded-md p-2 m-2")
 					label(for="name") Name
@@ -29,9 +29,12 @@ html(lang="en")
 					button(hx-post="/api/user/updateProfile" class="text-center bg-black hover:bg-gray-700 text-white font-bold py-2 px-4 rounded m-2") Save
 					p(class="text-red-500 text-xs italic" id="error-message")
 			div(class="sm:flex")
-				form(class="grid m-auto min-w-xs p-20 border-2 shadow-md rounded-md max-w-md" id="login-form" hx-target="#login-form")
+				div(class="grid m-auto min-w-xs max-h-screen overflow-scroll p-20 shadow-2xl rounded-lg max-w-md" id="login-form")
 					h1(class="text-center text-3xl") Your Conditions
 					div(class="")
+						form(onSubmit=(e)=>e.preventDefault() hx-post="/api/action/addMedForm" hx-target="this" hx-trigger="submit" class="max-h-screen overflow-scroll grid m-auto min-w-xs p-20 shadow-2xl w-fit rounded-lg max-w-md")
+							input(type="text" name="patient_id" placeholder="Id" value=user.info.patient_id class="border-2 hidden border-gray-300 rounded-md p-2 m-2")
+							button(type="submit" class="text-center bg-black hover:bg-gray-700 text-white font-bold py-2 px-4 rounded m-2") Add Medication 
 						each medication in user.medications
 							div(class="w-full bg-white rounded-lg shadow-md p-5 m-2")
 								form()
@@ -42,9 +45,8 @@ html(lang="en")
 									div()
 										input(name="condition_id" class="hidden"  value=medication.medicine.id)
 										p(class="text-center text-2xl")= medication.medicine.medicine_name
-									button(hx-post="/api/action/removeMedication" hx-target="#message" type="submit" class="text-center bg-black hover:bg-gray-700 text-white font-bold py-2 px-4 rounded m-2") Remove
+									button(hx-post="/api/action/removeMedication" hx-target="this" hx-swap="outerHTML" type="submit" class="text-center bg-black hover:bg-gray-700 text-white font-bold py-2 px-4 rounded m-2") Remove
 									p(id="message" class="text-center text-3xl")
-
 		//include medicine card
 
 		//include footer

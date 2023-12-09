@@ -1,9 +1,13 @@
 mixin patientCard(userOfList,index)
-	div(id=`accordion-collapse-body-${index}` class="hidden" aria-labelledby=`accordion-collapse-heading-${index}`)
-		div(class="p-5 border border-b-0 border-gray-200 dark:border-gray-700 dark:bg-gray-900")
-			each medicine in userOfList.medications
-				include medicineCard
-				+medicineCard(medicine)
-			form()
-				input(type="text" name="patient_id" placeholder="Id" value=userOfList.info.patient_id class="border-2 hidden border-gray-300 rounded-md p-2 m-2")
-				button(type="submit" class="rounded bg-green text-white" hx-get="/api/action/addMedication") Add Medication
+	//div(id=`accordion-collapse-body-${index}` class="hidden" aria-labelledby=`accordion-collapse-heading-${index}`)
+	div(class="p-5 bg-white rounded-xl shadow-lg m-2")
+		div()
+			img(src="https://i.imgur.com/8Km9tLL.png" class="rounded-full w-20 h-20 mx-auto")
+		div(class="text-center mt-2")
+			h3(class="text-xl text-gray-600 dark:text-gray-200 font-semibold")= userOfList.info.patient_name
+			p(class="text-gray-600 dark:text-gray-200")= userOfList.info.age
+		div(class="flex justify-center mt-4")
+		//form()
+			//input(type="text" name="patient_id" placeholder="Id" value=userOfList.info.patient_id class="border-2 hidden border-gray-300 rounded-md p-2 m-2")
+			//button(type="submit" class="rounded bg-green text-white" hx-get="/api/action/addMedication") Add Medication
+		a(class="rounded-2xl bg-gradient-to-r text-sm from-emerald-400 to-green-700 text-gray-600 dark:text-gray-200 p-2 m-2" href=`/profile?patient_id=${userOfList.info.patient_id}`) View Profile

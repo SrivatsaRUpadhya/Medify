@@ -24,7 +24,7 @@ class Medicines {
 	) {
 		return new Promise<"success">((resolve, reject) => {
 			db.query(
-				`INSERT INTO medForCondition (patient_id, condition_id, medicine_id, schedule, dosage) VALUES (?,?,?)`,
+				`INSERT INTO medForCondition (patient_id, condition_id, medicine_id, schedule, dosage) VALUES (?,?,?,?,?)`,
 				[patient_id, condition_id, medicine_id, schedule, dosage],
 				(err) => {
 					if (err) reject(err);

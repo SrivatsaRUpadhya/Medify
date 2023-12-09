@@ -1,0 +1,3 @@
+form(id="condition-form" )
+	input(type="text" name="patient_id" placeholder="Id" value=patient_id class="border-2 hidden border-gray-300 rounded-md p-2 m-2")
+	button(hx-post="/api/action/addMedForm" type="submit" hx-target="this" hx-swap="outerHTML" class="text-center bg-black hover:bg-gray-700 text-white font-bold py-2 px-4 rounded m-2") Add Medication 

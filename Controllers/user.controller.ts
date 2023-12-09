@@ -44,6 +44,24 @@ const updateProfile = (req: Request, res: Response) => {
 	});
 };
 
+const addPatient = (req: Request, res: Response) => {
+	asyncWraper(req, res, async (req: Request, res: Response) => {
+		const { name, phone, alt_phone, age, gender, height, weight } =
+			req.body;
+		const user = new User(
+			name,
+			phone,
+			alt_phone,
+			gender,
+			age,
+			height,
+			weight
+		);
+		await user.CreateUser(res.locals.user.userId);
+		res.setHeader("HX-Redirect", "/dashboard");
+		return res.status(200).send("success");
+	});
+};
 const dashboardContent = (req: Request, res: Response) => {
 	asyncWraper(req, res, async (req: Request, res: Response) => {
 		const users = await Account.getUsersInAccount(res.locals.user.userId);
@@ -85,4 +103,4 @@ const dashboardContent = (req: Request, res: Response) => {
 	});
 };
 
-export { profileDetails, updateProfile, dashboardContent };
+export { profileDetails, updateProfile, dashboardContent, addPatient };

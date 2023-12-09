@@ -77,7 +77,7 @@ const notify = async () => {
 	);
 
 	// Send the notifications
-	if (today.getHours() === 15 && !morning) {
+	if (today.getHours() === 12 && !morning) {
 		console.log(morning_subscriptions);
 		morning_subscriptions.map((sub) => {
 			console.log("Sending morning notifications to: " + sub?.account_id);
@@ -97,7 +97,7 @@ const notify = async () => {
 					});
 		});
 	}
-	if (today.getHours() === 15 && !noon) {
+	if (today.getHours() === 12 && !noon) {
 		noon_subscriptions.map((sub) => {
 			const subscription = sub?.subscription;
 
