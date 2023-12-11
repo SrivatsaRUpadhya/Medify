@@ -79,7 +79,7 @@ const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const { email, password } = yield req.body;
         console.log(req.body);
         const captcha_response = yield req.body["g-recaptcha-response"];
-        if (!email || !password) {
+        if (!email || !password || !captcha_response) {
             return res.status(201).send("Invalid credentials");
         }
         const final_user = yield account_model_1.default.getAccountByEmail(email);
@@ -104,7 +104,8 @@ const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             },
         });
         console.log(verify_captcha.data);
-        //if (!verify_captcha.data.success) throw new Error("Captcha failed");
+        if (!verify_captcha.data.success)
+            throw new Error("Captcha failed");
         const token = jsonwebtoken_1.default.sign(sessionData, secrets_1.default.jwt_key, {
             expiresIn: "1h",
         });

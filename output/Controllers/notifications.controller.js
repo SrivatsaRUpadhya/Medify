@@ -21,7 +21,6 @@ let morning = false;
 let noon = false;
 let evening = false;
 const notify = () => __awaiter(void 0, void 0, void 0, function* () {
-    console.log("Running notify");
     const allAccounts = yield account_model_1.default.getUsersOnAccount();
     const allSubscriptions = yield subscription_model_1.default.getAllSubscriptions();
     const allMedications = yield medicines_model_1.default.getAllMedications();
@@ -70,6 +69,7 @@ const notify = () => __awaiter(void 0, void 0, void 0, function* () {
     }
     if (today.getHours() === 12 && !noon) {
         noon_subscriptions.map((sub) => {
+            console.log("Sending noon notifications to: " + (sub === null || sub === void 0 ? void 0 : sub.account_id));
             const subscription = sub === null || sub === void 0 ? void 0 : sub.subscription;
             const payload = "";
             const options = {
@@ -88,6 +88,7 @@ const notify = () => __awaiter(void 0, void 0, void 0, function* () {
     }
     if (today.getHours() === 19 && !evening) {
         evening_subscriptions.map((sub) => {
+            console.log("Sending evening notifications to: " + (sub === null || sub === void 0 ? void 0 : sub.account_id));
             const subscription = sub === null || sub === void 0 ? void 0 : sub.subscription;
             const payload = "";
             const options = {
