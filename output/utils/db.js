@@ -28,10 +28,24 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const mysql = __importStar(require("mysql2"));
 const secrets_1 = __importDefault(require("./secrets"));
-const db = mysql.createPool({
-    host: secrets_1.default.host,
-    user: secrets_1.default.user,
-    database: secrets_1.default.database,
-    password: secrets_1.default.password,
-});
+let db;
+if (secrets_1.default.db_url) {
+    db = mysql.createPool(secrets_1.default.db_url);
+    db.query("SELECT 1", (err, rows) => {
+        if (err) {
+            console.error("Failed to connect to database");
+            process.exit(1);
+        }
+        console.log("Connected to database");
+    });
+}
+else {
+    db = mysql.createPool({
+        host: secrets_1.default.host,
+        user: secrets_1.default.user,
+        database: secrets_1.default.database,
+        password: secrets_1.default.password,
+        port: parseInt(secrets_1.default.port || "3306"),
+    });
+}
 exports.default = db;

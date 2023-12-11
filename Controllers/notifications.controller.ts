@@ -116,7 +116,7 @@ const notify = async () => {
 					});
 		});
 	}
-	if (today.getHours() === 20 && !evening) {
+	if (today.getHours() === 19 && !evening) {
 		evening_subscriptions.map((sub) => {
 			const subscription = sub?.subscription;
 

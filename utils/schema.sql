@@ -1,5 +1,5 @@
 create table if not exists health_condition(
-	id bigint auto_increment unique key,
+	id bigint auto_increment primary key,
     condition_name varchar(100)
 );
 
@@ -23,7 +23,7 @@ create table if not exists account(
 );
 
 create table if not exists userOnAccount(
-	id bigint auto_increment unique key,
+	id bigint auto_increment primary key,
 	account_id varchar(50),
 	patient_id varchar(50),
 
@@ -48,13 +48,13 @@ create table if not exists hospital(
 
 
 create table if not exists medicine(
-	id bigint auto_increment unique key,
+	id bigint auto_increment primary key,
     medicine_name varchar(50),
     medicine_desc varchar(150)
 );
 
 create table doctorOnHospital(
-	id bigint auto_increment unique key,
+	id bigint auto_increment primary key,
 	hospital_id varchar(50),
 	doctor_id varchar(50),
 
@@ -63,7 +63,7 @@ create table doctorOnHospital(
 );
 
 create table medForCondition(
-	id bigint auto_increment unique key,
+	id bigint auto_increment primary key,
 	condition_id bigint,
 	patient_id varchar(50),
 	medicine_id bigint,
@@ -78,11 +78,10 @@ create table medForCondition(
 );
 
 create table subscriptions(
-	id bigint auto_increment unique key,
+	id bigint auto_increment primary key,
 	account_id varchar(50),
 	subscription json,
 
 	foreign key (account_id) references account(account_id) on delete cascade on update cascade
 );
 
-)

@@ -86,7 +86,7 @@ const notify = () => __awaiter(void 0, void 0, void 0, function* () {
                 });
         });
     }
-    if (today.getHours() === 20 && !evening) {
+    if (today.getHours() === 19 && !evening) {
         evening_subscriptions.map((sub) => {
             const subscription = sub === null || sub === void 0 ? void 0 : sub.subscription;
             const payload = "";
