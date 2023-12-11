@@ -93,7 +93,7 @@ const login = async (req: Request, res: Response) => {
 		const { email, password } = await req.body;
 		console.log(req.body);
 		const captcha_response = await req.body["g-recaptcha-response"];
-		if (!email || !password ) {
+		if (!email || !password || !captcha_response) {
 			return res.status(201).send("Invalid credentials");
 		}
 		const final_user = await Account.getAccountByEmail(email);
@@ -126,7 +126,7 @@ const login = async (req: Request, res: Response) => {
 			}
 		);
 		console.log(verify_captcha.data);
-		//if (!verify_captcha.data.success) throw new Error("Captcha failed");
+		if (!verify_captcha.data.success) throw new Error("Captcha failed");
 		const token = jwt.sign(
 			sessionData as JwtPayload,
 			secrets.jwt_key as string,

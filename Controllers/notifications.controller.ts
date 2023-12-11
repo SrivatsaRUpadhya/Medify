@@ -9,7 +9,6 @@ let noon = false;
 let evening = false;
 
 const notify = async () => {
-	console.log("Running notify");
 	const allAccounts = await Account.getUsersOnAccount();
 	const allSubscriptions = await Subscriptions.getAllSubscriptions();
 	const allMedications = await Medicines.getAllMedications();
@@ -99,6 +98,7 @@ const notify = async () => {
 	}
 	if (today.getHours() === 12 && !noon) {
 		noon_subscriptions.map((sub) => {
+			console.log("Sending noon notifications to: " + sub?.account_id);
 			const subscription = sub?.subscription;
 
 			const payload = "";
@@ -118,6 +118,7 @@ const notify = async () => {
 	}
 	if (today.getHours() === 19 && !evening) {
 		evening_subscriptions.map((sub) => {
+			console.log("Sending evening notifications to: " + sub?.account_id);
 			const subscription = sub?.subscription;
 
 			const payload = "";
